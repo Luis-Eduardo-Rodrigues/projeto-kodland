@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Fontes originais e referencias locais; o jogo usa somente os arquivos
+# processados presentes em images/, sounds/ e music/.
+assets/
+referencias/
+tmp/
