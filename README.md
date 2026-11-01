@@ -37,7 +37,8 @@ Para garantir a centralizacao, sempre use um desses dois iniciadores.
 - Tres fases com objetivos, pontuacao e dificuldade progressiva
 - Menu moderno com botoes arredondados, personagens e guia compacto de teclas
 - Controle conjunto de musica e efeitos sonoros
-- Cavaleiro com animacoes alinhadas de idle, corrida, pulo, queda, dano e ataque
+- Novo cavaleiro em pixel art, com animacoes alinhadas de idle, corrida, pulo,
+  queda, dano, ataque e morte
 - Movimento mais suave, salto, dash com recarga e efeito visual
 - Aranhas, morcegos e mumias com movimento, patrulha e animacoes corrigidas
 - Morcegos com voo baixo e patrulha simples para facilitar o combate

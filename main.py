@@ -37,13 +37,13 @@ def animation(prefix, frame_count):
 
 
 HERO_ANIMATIONS = {
-    "idle": animation("hero_idle", 11),
-    "run": animation("hero_run", 8),
-    "jump": animation("hero_jump", 3),
-    "fall": animation("hero_fall", 3),
-    "attack": animation("hero_attack", 7),
-    "hit": animation("hero_hit", 4),
-    "death": animation("hero_death", 11),
+    "idle": animation("warrior_idle", 14),
+    "run": animation("warrior_run", 8),
+    "jump": animation("warrior_jump", 6),
+    "fall": animation("warrior_fall", 3),
+    "attack": animation("warrior_attack", 8),
+    "hit": animation("warrior_hit", 8),
+    "death": animation("warrior_death", 15),
 }
 
 ENEMY_ANIMATIONS = {
@@ -221,7 +221,7 @@ class AnimatedCharacter:
 
 class Hero(AnimatedCharacter):
     def __init__(self, spawn):
-        super().__init__(HERO_ANIMATIONS, "hero_idle_r_0")
+        super().__init__(HERO_ANIMATIONS, "warrior_idle_r_0")
         self.rect = Rect(0, 0, 34, 58)
         self.spawn = spawn
         self.position_x = 0.0
@@ -810,7 +810,7 @@ def draw_control_hint(x, y, key_text, key_width, description):
 
 def draw_menu():
     draw_background()
-    screen.blit("hero_idle_r_0", (28, 394))
+    screen.blit("warrior_idle_r_0", (28, 378))
     screen.blit("guardian_idle_l_0", (830, 376))
     draw_card(Rect(190, 24, 580, 492), PANEL, (67, 77, 94), 18)
     screen.draw.text(
