@@ -40,7 +40,7 @@ Para garantir a centralização, sempre use um desses dois iniciadores.
 - Controle conjunto de música e efeitos sonoros
 - Cavaleiro em pixel art com animações de espera, corrida, pulo e ataque
 - Plataformas sólidas, com colisão por cima, por baixo e pelas laterais
-- Aranhas, morcegos e múmias com animações de espera e movimento
+- Morcego com voo horizontal contínuo e animação de asas
 - Inimigos com patrulha limitada ao próprio território
 - Guardião final com três pontos de resistência
 - Três vidas, tela de vitória e tela de derrota

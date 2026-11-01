@@ -40,8 +40,8 @@ ENEMY_ANIMATIONS = {
         "walk": animation("spider_walk", 5),
     },
     "bat": {
-        "idle": animation("bat_idle", 5),
-        "walk": animation("bat_walk", 5),
+        "idle": animation("bat_idle", 4),
+        "walk": animation("bat_walk", 4),
     },
     "mummy": {
         "idle": animation("mummy_idle", 4),
