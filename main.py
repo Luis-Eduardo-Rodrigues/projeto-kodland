@@ -14,9 +14,9 @@ JUMP_SPEED = -540
 DASH_SPEED = 590
 MAX_LIVES = 5
 
-START_BUTTON = Rect(300, 250, 360, 56)
-SOUND_BUTTON = Rect(300, 326, 360, 56)
-EXIT_BUTTON = Rect(300, 402, 360, 56)
+START_BUTTON = Rect(92, 210, 368, 62)
+SOUND_BUTTON = Rect(92, 291, 368, 62)
+EXIT_BUTTON = Rect(92, 372, 368, 62)
 
 
 def animation(prefix, frame_count):
@@ -162,6 +162,7 @@ world_time = 0
 banner_timer = 0
 message = ""
 message_timer = 0
+mouse_position = (-1, -1)
 
 
 def play_sound(name):
@@ -717,51 +718,155 @@ def draw_interface():
         )
 
 
-def draw_button(rect, text, active=False):
-    color = (150, 98, 45) if active else (88, 61, 51)
+def draw_menu_button(rect, text, style):
+    hovered = rect.collidepoint(mouse_position)
+    colors = {
+        "start": ((151, 96, 37), (187, 127, 48)),
+        "sound": ((51, 61, 76), (67, 80, 99)),
+        "exit": ((77, 48, 48), (104, 57, 57)),
+    }
+    color = colors[style][hovered]
+    border = (255, 219, 132) if hovered else (199, 160, 88)
+    shadow = Rect(rect.x + 5, rect.y + 6, rect.width, rect.height)
+    screen.draw.filled_rect(shadow, (12, 14, 21))
     screen.draw.filled_rect(rect, color)
-    screen.draw.rect(rect, (226, 190, 111))
+    screen.draw.filled_rect(Rect(rect.x, rect.y, 7, rect.height), border)
+    screen.draw.rect(rect, border)
+
+    if style == "sound":
+        status_color = (100, 205, 139) if sound_enabled else (207, 91, 91)
+        screen.draw.filled_circle(
+            (rect.left + 31, rect.centery), 7, status_color
+        )
+    else:
+        marker = ">" if style == "start" else "X"
+        screen.draw.text(
+            marker,
+            center=(rect.left + 31, rect.centery),
+            fontsize=24,
+            color=border,
+        )
+
     screen.draw.text(
-        text, center=rect.center, fontsize=29, color=(255, 239, 196)
+        text,
+        center=(rect.centerx + 12, rect.centery),
+        fontsize=25,
+        color=(255, 242, 207),
+    )
+
+
+def draw_keycap(x, y, width, text):
+    key = Rect(x, y, width, 27)
+    screen.draw.filled_rect(
+        Rect(key.x + 2, key.y + 3, key.width, key.height),
+        (13, 15, 23),
+    )
+    screen.draw.filled_rect(key, (52, 59, 72))
+    screen.draw.rect(key, (150, 158, 169))
+    screen.draw.text(
+        text,
+        center=key.center,
+        fontsize=16,
+        color=(244, 235, 211),
+    )
+
+
+def draw_control_row(y, keys_data, description):
+    x = 526
+    for text, width in keys_data:
+        draw_keycap(x, y, width, text)
+        x += width + 6
+    screen.draw.text(
+        description,
+        midleft=(max(654, x + 4), y + 13),
+        fontsize=18,
+        color=(222, 225, 223),
     )
 
 
 def draw_menu():
     draw_background()
-    screen.draw.filled_rect(Rect(245, 52, 470, 430), (25, 28, 39))
-    screen.draw.rect(Rect(245, 52, 470, 430), (214, 173, 91))
+    screen.draw.filled_rect(Rect(42, 28, 876, 484), (21, 24, 34))
+    screen.draw.rect(Rect(42, 28, 876, 484), (198, 158, 85))
+    screen.draw.filled_rect(Rect(43, 29, 874, 5), (224, 180, 91))
     screen.draw.text(
         "ELDORIA",
-        center=(480, 110),
-        fontsize=58,
+        center=(480, 69),
+        fontsize=52,
         color=(246, 208, 103),
     )
     screen.draw.text(
         "O SELO DAS SOMBRAS",
-        center=(480, 158),
-        fontsize=35,
+        center=(480, 111),
+        fontsize=30,
         color=(232, 232, 222),
     )
     screen.draw.text(
-        "Moedas, combate e o guardiao da cripta",
-        center=(480, 205),
-        fontsize=20,
+        "Atravesse Eldoria e restaure o selo antes que as sombras escapem.",
+        center=(480, 142),
+        fontsize=18,
         color=(169, 181, 190),
     )
-    draw_button(START_BUTTON, "COMECAR O JOGO", True)
-    sound_text = (
-        "MUSICA E SONS: LIGADOS"
-        if sound_enabled
-        else "MUSICA E SONS: DESLIGADOS"
-    )
-    draw_button(SOUND_BUTTON, sound_text)
-    draw_button(EXIT_BUTTON, "SAIR")
+
+    screen.draw.filled_rect(Rect(68, 170, 416, 310), (29, 33, 45))
+    screen.draw.rect(Rect(68, 170, 416, 310), (76, 82, 96))
     screen.draw.text(
-        "A/D mover  |  ESPACO pular  |  Z atacar  |  SHIFT dash  |  P pausar",
-        center=(480, 510),
-        fontsize=18,
-        color=(224, 218, 201),
+        "MENU PRINCIPAL",
+        midleft=(92, 190),
+        fontsize=20,
+        color=(219, 181, 100),
     )
+    draw_menu_button(START_BUTTON, "INICIAR AVENTURA", "start")
+    sound_text = (
+        "AUDIO: LIGADO"
+        if sound_enabled
+        else "AUDIO: DESLIGADO"
+    )
+    draw_menu_button(SOUND_BUTTON, sound_text, "sound")
+    draw_menu_button(EXIT_BUTTON, "SAIR DO JOGO", "exit")
+    screen.draw.text(
+        "Clique em um botao  |  ENTER tambem inicia",
+        center=(276, 457),
+        fontsize=16,
+        color=(155, 166, 177),
+    )
+
+    screen.draw.filled_rect(Rect(500, 170, 392, 310), (29, 33, 45))
+    screen.draw.rect(Rect(500, 170, 392, 310), (76, 82, 96))
+    screen.draw.text(
+        "COMO JOGAR",
+        midleft=(524, 190),
+        fontsize=20,
+        color=(219, 181, 100),
+    )
+    screen.draw.text(
+        "Colete as moedas e derrote os inimigos",
+        midleft=(524, 218),
+        fontsize=17,
+        color=(224, 225, 218),
+    )
+    screen.draw.text(
+        "para destrancar a porta de cada fase.",
+        midleft=(524, 238),
+        fontsize=17,
+        color=(224, 225, 218),
+    )
+    screen.draw.line((524, 258), (868, 258), (76, 82, 96))
+    draw_control_row(
+        271,
+        (("A", 30), ("D", 30), ("SETAS", 62)),
+        "MOVER",
+    )
+    draw_control_row(306, (("ESPACO", 105), ("W", 30)), "PULAR")
+    draw_control_row(341, (("Z", 30), ("X", 30)), "ATACAR")
+    draw_control_row(376, (("SHIFT", 76), ("C", 30)), "DASH")
+    draw_control_row(411, (("P", 30),), "PAUSAR")
+    draw_control_row(446, (("ESC", 62),), "VOLTAR AO MENU")
+
+
+def on_mouse_move(pos):
+    global mouse_position
+    mouse_position = pos
 
 
 def draw_end_screen(title, subtitle):
