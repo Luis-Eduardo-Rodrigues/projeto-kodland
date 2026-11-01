@@ -9,7 +9,7 @@ TITLE = "Guerreiro Vs O Guardião"
 
 GRAVITY = 1450
 MOVE_SPEED = 240
-JUMP_SPEED = -530
+JUMP_SPEED = -610
 MAX_LIVES = 3
 
 PANEL = (24, 29, 41)
@@ -164,6 +164,8 @@ class Hero(AnimatedCharacter):
         self.attack_time = 0
         self.attack_id = 0
         self.invulnerable = 0
+        self.jump_buffer = 0
+        self.coyote_time = 0
         self.lives = MAX_LIVES
         self.respawn()
 
@@ -171,6 +173,8 @@ class Hero(AnimatedCharacter):
         self.rect.midbottom = self.spawn
         self.velocity_y = 0
         self.on_ground = True
+        self.jump_buffer = 0
+        self.coyote_time = 0.12
         self.actor.midbottom = self.rect.midbottom
 
     def move_horizontal(self, distance):
@@ -191,20 +195,41 @@ class Hero(AnimatedCharacter):
         self.rect.y += round(self.velocity_y * dt)
         self.on_ground = False
         for platform in platforms:
-            if not self.rect.colliderect(platform):
-                continue
-            if self.velocity_y >= 0 and old_rect.bottom <= platform.top:
+            horizontal_overlap = (
+                self.rect.right > platform.left + 4
+                and self.rect.left < platform.right - 4
+            )
+            landing = (
+                horizontal_overlap
+                and self.velocity_y >= 0
+                and old_rect.bottom <= platform.top + 4
+                and self.rect.bottom >= platform.top
+            )
+            hit_ceiling = (
+                horizontal_overlap
+                and self.velocity_y < 0
+                and old_rect.top >= platform.bottom - 4
+                and self.rect.top <= platform.bottom
+            )
+            if landing:
                 self.rect.bottom = platform.top
                 self.velocity_y = 0
                 self.on_ground = True
-            elif self.velocity_y < 0 and old_rect.top >= platform.bottom:
+                break
+            if hit_ceiling:
                 self.rect.top = platform.bottom
                 self.velocity_y = 0
+                break
 
     def jump(self):
-        if self.on_ground:
+        self.jump_buffer = 0.15
+
+    def try_jump(self):
+        if self.jump_buffer > 0 and self.coyote_time > 0:
             self.velocity_y = JUMP_SPEED
             self.on_ground = False
+            self.jump_buffer = 0
+            self.coyote_time = 0
             play_sound("jump")
 
     def attack(self):
@@ -237,8 +262,17 @@ class Hero(AnimatedCharacter):
         moving = direction_value != 0
         if direction_value:
             self.direction = "r" if direction_value > 0 else "l"
+        self.jump_buffer = max(0, self.jump_buffer - dt)
+        if self.on_ground:
+            self.coyote_time = 0.12
+        else:
+            self.coyote_time = max(0, self.coyote_time - dt)
+        self.try_jump()
         self.move_horizontal(direction_value * MOVE_SPEED * dt)
         self.move_vertical(dt)
+        if self.on_ground:
+            self.coyote_time = 0.12
+            self.try_jump()
         self.attack_time = max(0, self.attack_time - dt)
         self.invulnerable = max(0, self.invulnerable - dt)
 
