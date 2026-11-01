@@ -44,7 +44,7 @@ Para garantir a centralização, sempre use um desses dois iniciadores.
 - Plataformas sólidas, com colisão por cima, por baixo e pelas laterais
 - Movimento mais suave, salto, dash com recarga e efeito visual
 - Aranhas, morcegos e múmias com animações de espera e movimento
-- Morcegos com voo baixo e patrulha simples para facilitar o combate
+- Morcego com voo horizontal contínuo e animação de asas
 - Poções de cura, pontuação e porta com objetivo duplo
 - Guardião final com barra de vida e sete pontos de resistência
 - HUD, tela de pausa e mensagens de objetivo

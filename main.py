@@ -10,7 +10,7 @@ TITLE = "Guerreiro Vs O Guardião"
 
 GRAVITY = 1450
 MOVE_SPEED = 245
-JUMP_SPEED = -540
+JUMP_SPEED = -610
 DASH_SPEED = 590
 MAX_LIVES = 5
 
@@ -51,8 +51,8 @@ ENEMY_ANIMATIONS = {
         "walk": animation("spider_walk", 5),
     },
     "bat": {
-        "idle": animation("bat_idle", 5),
-        "walk": animation("bat_walk", 5),
+        "idle": animation("bat_idle", 4),
+        "walk": animation("bat_walk", 4),
     },
     "mummy": {
         "idle": animation("mummy_idle", 4),
@@ -116,7 +116,6 @@ LEVELS = [
             ("spider", 160, 424, 125, 260),
             ("bat", 410, 350, 340, 525),
             ("mummy", 650, 405, 595, 735),
-            ("bat", 800, 330, 755, 915),
         ],
     },
     {
@@ -144,7 +143,6 @@ LEVELS = [
             ("spider", 600, 410, 590, 730),
             ("bat", 410, 330, 345, 515),
             ("guardian", 760, 500, 680, 870),
-            ("bat", 800, 330, 755, 910),
         ],
     },
 ]
@@ -228,6 +226,8 @@ class Hero(AnimatedCharacter):
         self.invulnerable = 0
         self.dash_timer = 0
         self.dash_cooldown = 0
+        self.jump_buffer = 0
+        self.coyote_time = 0
         self.lives = MAX_LIVES
         self.respawn()
 
@@ -240,12 +240,24 @@ class Hero(AnimatedCharacter):
         self.sync_position()
         self.velocity_x = 0
         self.velocity_y = 0
+        self.on_ground = True
+        self.jump_buffer = 0
+        self.coyote_time = 0.12
         self.actor.midbottom = self.rect.midbottom
 
     def jump(self):
-        if self.on_ground and self.dash_timer <= 0:
+        self.jump_buffer = 0.15
+
+    def try_jump(self):
+        if (
+            self.jump_buffer > 0
+            and self.coyote_time > 0
+            and self.dash_timer <= 0
+        ):
             self.velocity_y = JUMP_SPEED
             self.on_ground = False
+            self.jump_buffer = 0
+            self.coyote_time = 0
             play_sound("jump")
 
     def attack(self):
@@ -363,8 +375,17 @@ class Hero(AnimatedCharacter):
                 break
 
     def update(self, dt):
+        self.jump_buffer = max(0, self.jump_buffer - dt)
+        if self.on_ground:
+            self.coyote_time = 0.12
+        else:
+            self.coyote_time = max(0, self.coyote_time - dt)
+        self.try_jump()
         self.move_horizontal(dt)
         self.move_vertical(dt)
+        if self.on_ground:
+            self.coyote_time = 0.12
+            self.try_jump()
         self.attack_timer = max(0, self.attack_timer - dt)
         self.hit_timer = max(0, self.hit_timer - dt)
         self.invulnerable = max(0, self.invulnerable - dt)
@@ -420,7 +441,6 @@ class Enemy(AnimatedCharacter):
         if kind == "bat":
             self.rect.y -= 38
         self.position_x = float(self.rect.x)
-        self.base_y = float(self.rect.y)
         self.patrol_left = patrol_left
         self.patrol_right = patrol_right
         self.speed = {
@@ -430,8 +450,9 @@ class Enemy(AnimatedCharacter):
             "guardian": 48,
         }[kind]
         self.direction_value = 1
-        self.pause_timer = random.uniform(0.15, 0.55)
-        self.phase = random.random() * math.tau
+        self.pause_timer = (
+            0 if kind == "bat" else random.uniform(0.15, 0.55)
+        )
         self.max_health = {
             "spider": 1,
             "bat": 1,
@@ -475,17 +496,20 @@ class Enemy(AnimatedCharacter):
             self.rect.left = self.patrol_left
             self.position_x = float(self.rect.x)
             self.direction_value = 1
-            self.pause_timer = 0.45
+            self.pause_timer = 0 if self.kind == "bat" else 0.45
         elif self.rect.right >= self.patrol_right:
             self.rect.right = self.patrol_right
             self.position_x = float(self.rect.x)
             self.direction_value = -1
-            self.pause_timer = 0.45
+            self.pause_timer = 0 if self.kind == "bat" else 0.45
 
     def update(self, dt):
         close_to_hero = abs(self.rect.centerx - hero.rect.centerx) < 65
         can_attack = self.kind in ("mummy", "guardian")
-        if self.pause_timer > 0:
+        if self.kind == "bat":
+            state = "walk"
+            self.patrol(dt)
+        elif self.pause_timer > 0:
             self.pause_timer -= dt
             state = "idle"
         elif can_attack and close_to_hero:
@@ -495,10 +519,6 @@ class Enemy(AnimatedCharacter):
             self.patrol(dt)
 
         self.direction = "r" if self.direction_value > 0 else "l"
-        if self.kind == "bat":
-            self.rect.y = round(
-                self.base_y + math.sin(world_time * 4 + self.phase) * 9
-            )
         self.animate(state, dt, 9)
         self.place_actor()
 
