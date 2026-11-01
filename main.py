@@ -300,12 +300,40 @@ class Hero(AnimatedCharacter):
             if self.velocity_x:
                 self.direction = "r" if self.velocity_x > 0 else "l"
 
+        previous_left = self.rect.left
+        previous_right = self.rect.right
         self.position_x += self.velocity_x * dt
         self.rect.x = round(self.position_x)
         self.rect.x = max(0, min(WIDTH - self.rect.width, self.rect.x))
+
+        for platform in platforms:
+            vertical_overlap = (
+                self.rect.bottom > platform.top + 2
+                and self.rect.top < platform.bottom - 2
+            )
+            if not vertical_overlap:
+                continue
+            hit_right_side = (
+                self.velocity_x > 0
+                and previous_right <= platform.left
+                and self.rect.right >= platform.left
+            )
+            hit_left_side = (
+                self.velocity_x < 0
+                and previous_left >= platform.right
+                and self.rect.left <= platform.right
+            )
+            if hit_right_side:
+                self.rect.right = platform.left
+                self.velocity_x = 0
+            elif hit_left_side:
+                self.rect.left = platform.right
+                self.velocity_x = 0
+
         self.position_x = float(self.rect.x)
 
     def move_vertical(self, dt):
+        previous_top = self.rect.top
         previous_bottom = self.rect.bottom
         if self.dash_timer <= 0:
             self.velocity_y += GRAVITY * dt
@@ -326,6 +354,19 @@ class Hero(AnimatedCharacter):
                 self.position_y = float(self.rect.y)
                 self.velocity_y = 0
                 self.on_ground = True
+                break
+
+            hit_ceiling = (
+                self.velocity_y < 0
+                and previous_top >= platform.bottom - 4
+                and self.rect.top <= platform.bottom
+                and self.rect.right > platform.left + 5
+                and self.rect.left < platform.right - 5
+            )
+            if hit_ceiling:
+                self.rect.top = platform.bottom
+                self.position_y = float(self.rect.y)
+                self.velocity_y = 0
                 break
 
     def update(self, dt):
@@ -810,7 +851,7 @@ def draw_control_hint(x, y, key_text, key_width, description):
 
 def draw_menu():
     draw_background()
-    screen.blit("warrior_idle_r_0", (28, 378))
+    screen.blit("warrior_idle_r_0", (45, 405))
     screen.blit("guardian_idle_l_0", (830, 376))
     draw_card(Rect(190, 24, 580, 492), PANEL, (67, 77, 94), 18)
     screen.draw.text(

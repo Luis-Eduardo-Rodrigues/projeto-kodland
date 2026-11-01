@@ -39,6 +39,7 @@ Para garantir a centralizacao, sempre use um desses dois iniciadores.
 - Controle conjunto de musica e efeitos sonoros
 - Novo cavaleiro em pixel art, com animacoes alinhadas de idle, corrida, pulo,
   queda, dano, ataque e morte
+- Plataformas solidas, com colisao por cima, por baixo e pelas laterais
 - Movimento mais suave, salto, dash com recarga e efeito visual
 - Aranhas, morcegos e mumias com movimento, patrulha e animacoes corrigidas
 - Morcegos com voo baixo e patrulha simples para facilitar o combate
