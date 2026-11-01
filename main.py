@@ -1,5 +1,3 @@
-import math
-
 from pygame import Rect
 
 
@@ -308,12 +306,11 @@ class Enemy(AnimatedCharacter):
         self.rect.midbottom = (x, floor_y)
         if kind == "bat":
             self.rect.y -= 42
-        self.base_y = self.rect.y
         self.left = left
         self.right = right
         self.speed = 55 if kind in ("mummy", "guardian") else 70
         self.movement = 1
-        self.pause = 0.3
+        self.pause = 0 if kind == "bat" else 0.3
         self.health = self.HEALTH[kind]
         self.last_attack = -1
         self.alive = True
@@ -323,7 +320,7 @@ class Enemy(AnimatedCharacter):
             self.actor.midbottom = self.rect.midbottom
 
     def update(self, dt):
-        if self.pause > 0:
+        if self.pause > 0 and self.kind != "bat":
             self.pause -= dt
             state = "idle"
         else:
@@ -332,14 +329,13 @@ class Enemy(AnimatedCharacter):
             if self.rect.left <= self.left:
                 self.rect.left = self.left
                 self.movement = 1
-                self.pause = 0.35
+                self.pause = 0 if self.kind == "bat" else 0.35
             elif self.rect.right >= self.right:
                 self.rect.right = self.right
                 self.movement = -1
-                self.pause = 0.35
+                self.pause = 0 if self.kind == "bat" else 0.35
         self.direction = "r" if self.movement > 0 else "l"
         if self.kind == "bat":
-            self.rect.y = round(self.base_y + math.sin(world_time * 4) * 8)
             self.actor.center = self.rect.center
         else:
             self.actor.midbottom = self.rect.midbottom
