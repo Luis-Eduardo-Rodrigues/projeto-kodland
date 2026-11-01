@@ -1,6 +1,6 @@
 # Creditos dos recursos
 
-O codigo e o design das fases de **O Cavaleiro de Valedouro** foram criados
+O codigo e o design das fases de **Eldoria: O Selo das Sombras** foram criados
 especificamente para este projeto.
 
 ## Arte
@@ -9,6 +9,9 @@ especificamente para este projeto.
   - <https://luizmelo.itch.io/hero-knight>
 - **Crypt Platformer Enemy Assets**, por IsabellaP / This But Dragons - CC0 1.0
   - <https://isabellap.itch.io/crypt-platformer-enemy-assets>
+
+O Guardiao do Selo e uma variacao de cor e escala criada a partir da mumia do
+pacote Crypt Platformer Enemy Assets.
 
 Os fundos, plataformas, moedas, porta e interface sao desenhados pelo codigo do
 jogo e nao reutilizam as imagens da pasta local de referencias.
