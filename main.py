@@ -847,12 +847,12 @@ def draw_menu():
         fontsize=16,
         color=ACCENT_LIGHT,
     )
-    draw_control_hint(218, 431, "A/D", 48, "Mover")
-    draw_control_hint(365, 431, "ESPAÇO", 88, "Pular")
-    draw_control_hint(550, 431, "Z", 30, "Atacar")
-    draw_control_hint(245, 469, "SHIFT", 68, "Dash")
-    draw_control_hint(410, 469, "P", 30, "Pausar")
-    draw_control_hint(575, 469, "ESC", 52, "Menu")
+    draw_control_hint(218, 431, "A/D", 72, "Mover")
+    draw_control_hint(380, 431, "ESPAÇO", 72, "Pular")
+    draw_control_hint(542, 431, "Z", 72, "Atacar")
+    draw_control_hint(218, 469, "SHIFT", 72, "Dash")
+    draw_control_hint(380, 469, "P", 72, "Pausar")
+    draw_control_hint(542, 469, "ESC", 72, "Menu")
 
 
 def on_mouse_move(pos):
