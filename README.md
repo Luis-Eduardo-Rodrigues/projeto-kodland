@@ -18,9 +18,9 @@ python3 -m pip install -r requirements.txt
 ./run_game.sh
 ```
 
-O iniciador posiciona a janela no centro da tela. No Windows, execute
-`run_game.bat`. Tambem e possivel usar `pgzrun main.py`, mas nesse caso o
-posicionamento fica a cargo do sistema operacional.
+O iniciador posiciona a janela no centro da tela e evita a janela temporaria
+de 100 x 100 criada pelo comando `pgzrun`. No Windows, execute `run_game.bat`.
+Para garantir a centralizacao, sempre use um desses dois iniciadores.
 
 ## Controles
 
