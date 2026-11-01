@@ -35,7 +35,7 @@ Para garantir a centralizacao, sempre use um desses dois iniciadores.
 ## Recursos implementados
 
 - Tres fases com objetivos, pontuacao e dificuldade progressiva
-- Menu principal com hover, estado do audio e guia compacto de teclas
+- Menu moderno com botoes arredondados, personagens e guia compacto de teclas
 - Controle conjunto de musica e efeitos sonoros
 - Cavaleiro com animacoes alinhadas de idle, corrida, pulo, queda, dano e ataque
 - Movimento mais suave, salto, dash com recarga e efeito visual
@@ -43,7 +43,7 @@ Para garantir a centralizacao, sempre use um desses dois iniciadores.
 - Morcegos com voo baixo e patrulha simples para facilitar o combate
 - Pocoes de cura, pontuacao e porta com objetivo duplo
 - Guardiao final com barra de vida e sete pontos de resistencia
-- Tela de pausa, HUD ampliado e mensagens de objetivo
+- HUD alinhado, tela de pausa e mensagens com linguagem mais natural
 - Classes proprias para personagens, movimento e animacao
 
 Consulte [CREDITS.md](CREDITS.md) para as licencas dos recursos visuais e

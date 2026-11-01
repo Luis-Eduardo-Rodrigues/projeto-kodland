@@ -14,9 +14,17 @@ JUMP_SPEED = -540
 DASH_SPEED = 590
 MAX_LIVES = 5
 
-START_BUTTON = Rect(250, 180, 460, 58)
-SOUND_BUTTON = Rect(250, 253, 460, 58)
-EXIT_BUTTON = Rect(250, 326, 460, 58)
+PANEL = (24, 29, 41)
+PANEL_LIGHT = (39, 47, 63)
+ACCENT = (224, 161, 72)
+ACCENT_LIGHT = (246, 190, 105)
+TEXT = (241, 238, 226)
+TEXT_SOFT = (169, 181, 190)
+BORDER = (80, 91, 108)
+
+START_BUTTON = Rect(300, 190, 360, 54)
+SOUND_BUTTON = Rect(300, 258, 360, 50)
+EXIT_BUTTON = Rect(300, 322, 360, 50)
 
 
 def animation(prefix, frame_count):
@@ -530,10 +538,12 @@ def objective_message():
     missing_enemies = remaining_enemies()
     parts = []
     if missing_coins:
-        parts.append(f"{missing_coins} MOEDA(S)")
+        word = "moeda" if missing_coins == 1 else "moedas"
+        parts.append(f"{missing_coins} {word}")
     if missing_enemies:
-        parts.append(f"{missing_enemies} INIMIGO(S)")
-    return "FALTA: " + " E ".join(parts)
+        word = "inimigo" if missing_enemies == 1 else "inimigos"
+        parts.append(f"{missing_enemies} {word}")
+    return "Ainda falta: " + " e ".join(parts) + "."
 
 
 def update_collectibles():
@@ -586,9 +596,36 @@ def update(dt):
             message_timer = 1.0
 
 
+def draw_rounded_rect(rect, color, radius=12):
+    radius = min(radius, rect.width // 2, rect.height // 2)
+    screen.draw.filled_rect(
+        Rect(rect.x + radius, rect.y, rect.width - radius * 2, rect.height),
+        color,
+    )
+    screen.draw.filled_rect(
+        Rect(rect.x, rect.y + radius, rect.width, rect.height - radius * 2),
+        color,
+    )
+    for center in (
+        (rect.left + radius, rect.top + radius),
+        (rect.right - radius, rect.top + radius),
+        (rect.left + radius, rect.bottom - radius),
+        (rect.right - radius, rect.bottom - radius),
+    ):
+        screen.draw.filled_circle(center, radius, color)
+
+
+def draw_card(rect, color=PANEL, border=BORDER, radius=12):
+    draw_rounded_rect(rect, border, radius)
+    inner = Rect(rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2)
+    draw_rounded_rect(inner, color, radius - 1)
+
+
 def draw_background():
     data = level if level else LEVELS[0]
-    screen.fill(data["sky"])
+    for band in range(9):
+        color = tuple(value + band * 2 for value in data["sky"])
+        screen.draw.filled_rect(Rect(0, band * 60, WIDTH, 60), color)
     screen.draw.filled_circle((790, 105), 38, (242, 218, 145))
 
     horizon = data["horizon"]
@@ -656,108 +693,108 @@ def draw_coins_and_potions():
 
 def draw_interface():
     collected = len(coins) - remaining_coins()
-    screen.draw.filled_rect(Rect(14, 14, 475, 58), (20, 23, 34))
-    screen.draw.text(
-        f"FASE {level_index + 1}/3   VIDAS: {hero.lives}/{MAX_LIVES}   "
-        f"MOEDAS: {collected}/{len(coins)}   PONTOS: {score}",
-        (26, 31),
-        fontsize=21,
-        color=(245, 232, 190),
+    draw_card(Rect(16, 14, 520, 52))
+    stats = (
+        ("Fase", f"{level_index + 1}/3", 32),
+        ("Vidas", f"{hero.lives}/{MAX_LIVES}", 143),
+        ("Moedas", f"{collected}/{len(coins)}", 262),
+        ("Pontos", str(score), 399),
     )
+    for label, value, x in stats:
+        screen.draw.text(
+            label,
+            midleft=(x, 29),
+            fontsize=14,
+            color=TEXT_SOFT,
+        )
+        screen.draw.text(
+            value,
+            midleft=(x, 49),
+            fontsize=19,
+            color=TEXT,
+        )
 
+    draw_card(Rect(548, 14, 120, 52))
     cooldown_width = 92
     dash_ready = 1 - min(1, hero.dash_cooldown / 1.15)
-    screen.draw.text("DASH", (505, 24), fontsize=18, color=(199, 214, 224))
-    screen.draw.filled_rect(Rect(505, 48, cooldown_width, 8), (38, 45, 56))
-    screen.draw.filled_rect(
-        Rect(505, 48, round(cooldown_width * dash_ready), 8),
-        (100, 185, 215),
-    )
+    screen.draw.text("Dash", midleft=(560, 29), fontsize=15, color=TEXT_SOFT)
+    draw_rounded_rect(Rect(560, 47, cooldown_width, 7), (54, 63, 78), 3)
+    dash_width = round(cooldown_width * dash_ready)
+    if dash_width:
+        draw_rounded_rect(Rect(560, 47, dash_width, 7), (92, 190, 214), 3)
 
     guardian = next(
         (enemy for enemy in enemies if enemy.kind == "guardian" and enemy.alive),
         None,
     )
     if guardian:
+        draw_card(Rect(680, 14, 264, 52))
         screen.draw.text(
-            "O GUARDIÃO",
-            center=(760, 27),
-            fontsize=18,
+            "O Guardião",
+            midleft=(695, 29),
+            fontsize=15,
             color=(231, 190, 241),
         )
-        screen.draw.filled_rect(Rect(655, 45, 210, 10), (44, 25, 48))
-        boss_width = round(210 * guardian.health / guardian.max_health)
-        screen.draw.filled_rect(Rect(655, 45, boss_width, 10), (153, 67, 177))
+        draw_rounded_rect(Rect(695, 47, 234, 7), (57, 40, 64), 3)
+        boss_width = round(234 * guardian.health / guardian.max_health)
+        draw_rounded_rect(
+            Rect(695, 47, boss_width, 7),
+            (169, 88, 184),
+            3,
+        )
 
     if banner_timer > 0:
-        screen.draw.filled_rect(Rect(220, 90, 520, 58), (20, 23, 34))
+        draw_card(Rect(270, 88, 420, 50))
         screen.draw.text(
-            level["name"],
-            center=(480, 119),
-            fontsize=32,
-            color=(246, 208, 103),
+            f"Fase {level_index + 1}  ·  {level['name'].title()}",
+            center=(480, 113),
+            fontsize=24,
+            color=ACCENT_LIGHT,
         )
     if message_timer > 0:
+        draw_card(Rect(240, 158, 480, 48))
         screen.draw.text(
             message,
-            center=(480, 185),
-            fontsize=26,
-            color=(255, 220, 105),
-            owidth=1,
-            ocolor=(30, 25, 25),
+            center=(480, 182),
+            fontsize=21,
+            color=ACCENT_LIGHT,
         )
 
 
 def draw_menu_button(rect, text, style):
     hovered = rect.collidepoint(mouse_position)
     colors = {
-        "start": ((151, 96, 37), (187, 127, 48)),
-        "sound": ((51, 61, 76), (67, 80, 99)),
-        "exit": ((77, 48, 48), (104, 57, 57)),
+        "start": (ACCENT, ACCENT_LIGHT),
+        "sound": (PANEL_LIGHT, (54, 65, 84)),
+        "exit": (PANEL, PANEL_LIGHT),
     }
     color = colors[style][hovered]
-    border = (255, 219, 132) if hovered else (199, 160, 88)
-    shadow = Rect(rect.x + 5, rect.y + 6, rect.width, rect.height)
-    screen.draw.filled_rect(shadow, (12, 14, 21))
-    screen.draw.filled_rect(rect, color)
-    screen.draw.filled_rect(Rect(rect.x, rect.y, 7, rect.height), border)
-    screen.draw.rect(rect, border)
+    border = ACCENT_LIGHT if hovered else BORDER
+    shadow = Rect(rect.x, rect.y + 4, rect.width, rect.height)
+    draw_rounded_rect(shadow, (13, 16, 23), 12)
+    draw_card(rect, color, border, 12)
 
     if style == "sound":
         status_color = (100, 205, 139) if sound_enabled else (207, 91, 91)
-        screen.draw.filled_circle(
-            (rect.left + 31, rect.centery), 7, status_color
-        )
-    else:
-        marker = ">" if style == "start" else "X"
-        screen.draw.text(
-            marker,
-            center=(rect.left + 31, rect.centery),
-            fontsize=24,
-            color=border,
-        )
+        screen.draw.filled_circle((rect.left + 28, rect.centery), 6, status_color)
 
     screen.draw.text(
         text,
-        center=(rect.centerx + 12, rect.centery),
-        fontsize=25,
-        color=(255, 242, 207),
+        center=rect.center,
+        fontsize=24,
+        color=PANEL if style == "start" else TEXT,
     )
 
 
 def draw_keycap(x, y, width, text):
-    key = Rect(x, y, width, 27)
-    screen.draw.filled_rect(
-        Rect(key.x + 2, key.y + 3, key.width, key.height),
-        (13, 15, 23),
-    )
-    screen.draw.filled_rect(key, (52, 59, 72))
-    screen.draw.rect(key, (150, 158, 169))
+    key = Rect(x, y, width, 25)
+    draw_rounded_rect(Rect(key.x, key.y + 2, key.width, key.height), PANEL, 6)
+    draw_card(key, PANEL_LIGHT, BORDER, 6)
     screen.draw.text(
         text,
         center=key.center,
-        fontsize=16,
-        color=(244, 235, 211),
+        fontsize=14,
+        color=TEXT,
     )
 
 
@@ -765,57 +802,57 @@ def draw_control_hint(x, y, key_text, key_width, description):
     draw_keycap(x, y, key_width, key_text)
     screen.draw.text(
         description,
-        midleft=(x + key_width + 8, y + 13),
-        fontsize=16,
-        color=(222, 225, 223),
+        midleft=(x + key_width + 8, y + 12),
+        fontsize=15,
+        color=TEXT_SOFT,
     )
 
 
 def draw_menu():
     draw_background()
-    screen.draw.filled_rect(Rect(180, 28, 600, 484), (21, 24, 34))
-    screen.draw.rect(Rect(180, 28, 600, 484), (198, 158, 85))
-    screen.draw.filled_rect(Rect(181, 29, 598, 5), (224, 180, 91))
+    screen.blit("hero_idle_r_0", (28, 394))
+    screen.blit("guardian_idle_l_0", (830, 376))
+    draw_card(Rect(190, 24, 580, 492), PANEL, (67, 77, 94), 18)
     screen.draw.text(
-        "GUERREIRO",
-        center=(480, 70),
-        fontsize=52,
-        color=(246, 208, 103),
+        "Guerreiro",
+        center=(480, 67),
+        fontsize=49,
+        color=ACCENT_LIGHT,
     )
     screen.draw.text(
-        "VS O GUARDIÃO",
-        center=(480, 111),
-        fontsize=30,
-        color=(232, 232, 222),
+        "vs. o Guardião",
+        center=(480, 107),
+        fontsize=28,
+        color=TEXT,
     )
     screen.draw.text(
-        "Colete as moedas, derrote os inimigos e abra a porta.",
-        center=(480, 148),
-        fontsize=18,
-        color=(169, 181, 190),
+        "Pegue as moedas, enfrente os monstros e encontre a saída.",
+        center=(480, 151),
+        fontsize=17,
+        color=TEXT_SOFT,
     )
-    draw_menu_button(START_BUTTON, "INICIAR AVENTURA", "start")
+    draw_menu_button(START_BUTTON, "Jogar", "start")
     sound_text = (
-        "AUDIO: LIGADO"
+        "Som ligado"
         if sound_enabled
-        else "AUDIO: DESLIGADO"
+        else "Som desligado"
     )
     draw_menu_button(SOUND_BUTTON, sound_text, "sound")
-    draw_menu_button(EXIT_BUTTON, "SAIR DO JOGO", "exit")
+    draw_menu_button(EXIT_BUTTON, "Sair", "exit")
 
-    screen.draw.line((216, 408), (744, 408), (76, 82, 96))
+    screen.draw.line((226, 398), (734, 398), BORDER)
     screen.draw.text(
-        "CONTROLES",
-        center=(480, 424),
+        "Controles",
+        center=(480, 414),
         fontsize=16,
-        color=(219, 181, 100),
+        color=ACCENT_LIGHT,
     )
-    draw_control_hint(218, 438, "A/D", 48, "MOVER")
-    draw_control_hint(365, 438, "ESPACO", 88, "PULAR")
-    draw_control_hint(550, 438, "Z", 30, "ATACAR")
-    draw_control_hint(245, 474, "SHIFT", 68, "DASH")
-    draw_control_hint(410, 474, "P", 30, "PAUSAR")
-    draw_control_hint(575, 474, "ESC", 52, "MENU")
+    draw_control_hint(218, 431, "A/D", 48, "Mover")
+    draw_control_hint(365, 431, "ESPAÇO", 88, "Pular")
+    draw_control_hint(550, 431, "Z", 30, "Atacar")
+    draw_control_hint(245, 469, "SHIFT", 68, "Dash")
+    draw_control_hint(410, 469, "P", 30, "Pausar")
+    draw_control_hint(575, 469, "ESC", 52, "Menu")
 
 
 def on_mouse_move(pos):
@@ -825,25 +862,24 @@ def on_mouse_move(pos):
 
 def draw_end_screen(title, subtitle):
     draw_background()
-    screen.draw.filled_rect(Rect(220, 140, 520, 260), (25, 28, 39))
-    screen.draw.rect(Rect(220, 140, 520, 260), (214, 173, 91))
+    draw_card(Rect(245, 135, 470, 270), PANEL, BORDER, 18)
     screen.draw.text(
-        title, center=(480, 205), fontsize=52, color=(246, 208, 103)
+        title, center=(480, 197), fontsize=45, color=ACCENT_LIGHT
     )
     screen.draw.text(
-        subtitle, center=(480, 267), fontsize=25, color=(232, 232, 222)
+        subtitle, center=(480, 252), fontsize=22, color=TEXT
     )
     screen.draw.text(
-        f"PONTUACAO FINAL: {score}",
-        center=(480, 310),
-        fontsize=25,
-        color=(246, 208, 103),
+        f"Você fez {score} pontos",
+        center=(480, 298),
+        fontsize=22,
+        color=ACCENT_LIGHT,
     )
     screen.draw.text(
-        "R - jogar novamente     ESC - menu",
-        center=(480, 355),
-        fontsize=21,
-        color=(169, 181, 190),
+        "R para jogar de novo  ·  Esc para voltar ao menu",
+        center=(480, 354),
+        fontsize=17,
+        color=TEXT_SOFT,
     )
 
 
@@ -860,19 +896,24 @@ def draw_world():
 
 
 def draw_pause():
-    screen.draw.filled_rect(Rect(260, 175, 440, 190), (20, 23, 34))
-    screen.draw.rect(Rect(260, 175, 440, 190), (214, 173, 91))
+    draw_card(Rect(280, 170, 400, 200), PANEL, BORDER, 18)
     screen.draw.text(
-        "JOGO PAUSADO",
-        center=(480, 225),
+        "Pausa",
+        center=(480, 221),
         fontsize=43,
-        color=(246, 208, 103),
+        color=ACCENT_LIGHT,
     )
     screen.draw.text(
-        "P - continuar     ESC - menu",
-        center=(480, 295),
-        fontsize=25,
-        color=(232, 232, 222),
+        "Respira um pouco. O jogo espera por você.",
+        center=(480, 270),
+        fontsize=19,
+        color=TEXT,
+    )
+    screen.draw.text(
+        "P para continuar  ·  Esc para voltar ao menu",
+        center=(480, 319),
+        fontsize=17,
+        color=TEXT_SOFT,
     )
 
 
@@ -881,11 +922,11 @@ def draw():
         draw_menu()
         return
     if game_state in ("victory", "game_over"):
-        title = "SELO RESTAURADO!" if game_state == "victory" else "FIM DE JOGO"
+        title = "Você conseguiu!" if game_state == "victory" else "Quase!"
         subtitle = (
-            "As sombras deixaram Eldoria."
+            "O Guardião foi derrotado."
             if game_state == "victory"
-            else "O guardiao ainda protege a cripta."
+            else "Dá para tentar de novo."
         )
         draw_end_screen(title, subtitle)
         return
