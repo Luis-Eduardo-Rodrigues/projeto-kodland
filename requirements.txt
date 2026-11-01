@@ -1,1 +1,1 @@
-pgzero>=1.2
+pgzero==1.2.1

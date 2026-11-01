@@ -1,6 +1,8 @@
-# Creditos dos recursos
+# Créditos dos recursos
 
-O codigo e o design das fases de **Guerreiro Vs O Guardião** foram criados
+# Código e design
+
+O código e o design das fases de **Guerreiro Vs O Guardião** foram criados
 especificamente para este projeto.
 
 ## Arte
@@ -9,16 +11,14 @@ especificamente para este projeto.
   - <https://xzany.itch.io/free-knight-2d-pixel-art>
   - Uso permitido em projetos pessoais e comerciais; os quadros foram
     ampliados e organizados para este jogo.
-- **Hero Knight**, por LuizMelo - CC0 1.0
-  - <https://luizmelo.itch.io/hero-knight>
 - **Crypt Platformer Enemy Assets**, por IsabellaP / This But Dragons - CC0 1.0
   - <https://isabellap.itch.io/crypt-platformer-enemy-assets>
 
-O Guardiao do Selo e uma variacao de cor e escala criada a partir da mumia do
+O Guardião do Selo é uma variação de cor e escala criada a partir da múmia do
 pacote Crypt Platformer Enemy Assets.
 
-Os fundos, plataformas, moedas, porta e interface sao desenhados pelo codigo do
-jogo e nao reutilizam as imagens da pasta local de referencias.
+Os fundos, plataformas, moedas, porta e interface são desenhados pelo código do
+jogo e não reutilizam as imagens da pasta local de referências.
 
 ## Audio
 
@@ -29,5 +29,5 @@ jogo e nao reutilizam as imagens da pasta local de referencias.
 - **The Old Tower Inn (Chiptune)**, por RandomMind - CC0 1.0
   - <https://opengameart.org/content/chiptune-medieval-the-old-tower-inn>
 
-As atribuicoes foram mantidas em reconhecimento ao trabalho dos autores,
-inclusive quando nao sao obrigatorias pela licenca.
+As atribuições foram mantidas em reconhecimento ao trabalho dos autores,
+inclusive quando não são obrigatórias pela licença.

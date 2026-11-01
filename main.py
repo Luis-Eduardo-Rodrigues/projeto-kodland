@@ -43,7 +43,6 @@ HERO_ANIMATIONS = {
     "fall": animation("warrior_fall", 3),
     "attack": animation("warrior_attack", 8),
     "hit": animation("warrior_hit", 8),
-    "death": animation("warrior_death", 15),
 }
 
 ENEMY_ANIMATIONS = {
@@ -52,14 +51,8 @@ ENEMY_ANIMATIONS = {
         "walk": animation("spider_walk", 5),
     },
     "bat": {
-        "idle": {
-            "l": ["bat_walk_l_0"],
-            "r": ["bat_walk_r_0"],
-        },
-        "walk": {
-            "l": ["bat_walk_l_0"],
-            "r": ["bat_walk_r_0"],
-        },
+        "idle": animation("bat_idle", 5),
+        "walk": animation("bat_walk", 5),
     },
     "mummy": {
         "idle": animation("mummy_idle", 4),
@@ -765,7 +758,11 @@ def draw_interface():
         draw_rounded_rect(Rect(560, 47, dash_width, 7), (92, 190, 214), 3)
 
     guardian = next(
-        (enemy for enemy in enemies if enemy.kind == "guardian" and enemy.alive),
+        (
+            enemy
+            for enemy in enemies
+            if enemy.kind == "guardian" and enemy.alive
+        ),
         None,
     )
     if guardian:
@@ -817,7 +814,8 @@ def draw_menu_button(rect, text, style):
 
     if style == "sound":
         status_color = (100, 205, 139) if sound_enabled else (207, 91, 91)
-        screen.draw.filled_circle((rect.left + 28, rect.centery), 6, status_color)
+        status_position = (rect.left + 28, rect.centery)
+        screen.draw.filled_circle(status_position, 6, status_color)
 
     screen.draw.text(
         text,
