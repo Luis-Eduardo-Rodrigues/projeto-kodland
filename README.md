@@ -6,6 +6,34 @@ mecânicas essenciais e cerca de metade do código da edição completa.
 
 ![Tela inicial de Guerreiro Vs O Guardião](docs/tela-inicial.png)
 
+## Versões do projeto
+
+O repositório possui duas edições jogáveis do mesmo projeto:
+
+| Branch | Conteúdo |
+| --- | --- |
+| `main` | Versão completa, com três fases, dash, pausa, poções, pontuação, HUD e mais de mil linhas de código. |
+| `versao-resumida` | Versão mais curta, com duas fases e apenas as mecânicas essenciais. É a edição indicada para a avaliação da Kodland e para estudar o código. |
+
+### Como trocar de versão
+
+Feche o jogo antes da troca. No terminal, dentro da pasta do projeto, use:
+
+```bash
+# Abrir a versão completa
+git switch main
+./run_game.sh
+
+# Abrir a versão resumida
+git switch versao-resumida
+./run_game.sh
+```
+
+No Windows, substitua `./run_game.sh` por `run_game.bat`. O comando
+`git branch --show-current` informa qual versão está selecionada. Se alguma
+branch ainda não aparecer em uma cópia recém-baixada, execute `git fetch`
+antes de fazer a troca.
+
 ## História
 
 Um guerreiro precisa atravessar o vilarejo de Arven e chegar à cripta do
