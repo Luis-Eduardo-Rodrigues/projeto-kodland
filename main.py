@@ -6,7 +6,7 @@ from pygame import Rect
 
 WIDTH = 960
 HEIGHT = 540
-TITLE = "Eldoria: O Selo das Sombras"
+TITLE = "Guerreiro Vs O Guardião"
 
 GRAVITY = 1450
 MOVE_SPEED = 245
@@ -680,7 +680,7 @@ def draw_interface():
     )
     if guardian:
         screen.draw.text(
-            "GUARDIAO DO SELO",
+            "O GUARDIÃO",
             center=(760, 27),
             fontsize=18,
             color=(231, 190, 241),
@@ -777,13 +777,13 @@ def draw_menu():
     screen.draw.rect(Rect(180, 28, 600, 484), (198, 158, 85))
     screen.draw.filled_rect(Rect(181, 29, 598, 5), (224, 180, 91))
     screen.draw.text(
-        "ELDORIA",
+        "GUERREIRO",
         center=(480, 70),
         fontsize=52,
         color=(246, 208, 103),
     )
     screen.draw.text(
-        "O SELO DAS SOMBRAS",
+        "VS O GUARDIÃO",
         center=(480, 111),
         fontsize=30,
         color=(232, 232, 222),

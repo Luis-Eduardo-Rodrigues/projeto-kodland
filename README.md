@@ -1,11 +1,11 @@
-# Eldoria: O Selo das Sombras
+# Guerreiro Vs O Guardião
 
 Jogo de plataforma medieval 2D criado em Python com Pygame Zero para o teste
 pratico de tutoria da Kodland.
 
 ## Historia
 
-Um cavaleiro precisa atravessar o vilarejo de Arven, as muralhas de Eldoria e
+Um guerreiro precisa atravessar o vilarejo de Arven, as muralhas de Eldoria e
 a cripta onde o Selo das Sombras foi rompido. Em cada fase ele deve recolher
 todas as moedas e derrotar os inimigos para abrir a porta de saida.
 

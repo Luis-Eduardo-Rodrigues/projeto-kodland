@@ -1,6 +1,6 @@
 # Creditos dos recursos
 
-O codigo e o design das fases de **Eldoria: O Selo das Sombras** foram criados
+O codigo e o design das fases de **Guerreiro Vs O Guardião** foram criados
 especificamente para este projeto.
 
 ## Arte
