@@ -1,15 +1,16 @@
 # Guerreiro Vs O Guardião
 
 Jogo de plataforma medieval 2D criado em Python com Pygame Zero para o teste
-prático de tutoria da Kodland.
+prático de tutoria da Kodland. Esta branch contém uma versão resumida, com as
+mecânicas essenciais e cerca de metade do código da edição completa.
 
 ![Tela inicial de Guerreiro Vs O Guardião](docs/tela-inicial.png)
 
 ## História
 
-Um guerreiro precisa atravessar o vilarejo de Arven, as muralhas de Eldoria e
-a cripta onde o Selo das Sombras foi rompido. Em cada fase, ele deve recolher
-todas as moedas e derrotar os inimigos para abrir a porta de saída.
+Um guerreiro precisa atravessar o vilarejo de Arven e chegar à cripta do
+Guardião. Em cada fase, ele deve recolher todas as moedas e derrotar os
+inimigos para abrir a porta de saída.
 
 ## Como executar
 
@@ -29,25 +30,20 @@ Para garantir a centralização, sempre use um desses dois iniciadores.
 - `A`/`D` ou setas: movimentar
 - `W`, seta para cima ou `Espaço`: pular
 - `Z` ou `X`: atacar com a espada
-- `Shift` ou `C`: executar um dash
-- `P`: pausar ou continuar
 - `Esc`: voltar ao menu
 - `R`: reiniciar depois da vitória ou derrota
 
 ## Recursos implementados
 
-- Três fases com objetivos, pontuação e dificuldade progressiva
+- Duas fases curtas com moedas, inimigos e porta de saída
 - Menu com botões clicáveis e guia compacto de teclas
 - Controle conjunto de música e efeitos sonoros
-- Cavaleiro em pixel art com animações de espera, corrida, pulo, queda, dano e
-  ataque
+- Cavaleiro em pixel art com animações de espera, corrida, pulo e ataque
 - Plataformas sólidas, com colisão por cima, por baixo e pelas laterais
-- Movimento mais suave, salto, dash com recarga e efeito visual
 - Aranhas, morcegos e múmias com animações de espera e movimento
-- Morcegos com voo baixo e patrulha simples para facilitar o combate
-- Poções de cura, pontuação e porta com objetivo duplo
-- Guardião final com barra de vida e sete pontos de resistência
-- HUD, tela de pausa e mensagens de objetivo
+- Inimigos com patrulha limitada ao próprio território
+- Guardião final com três pontos de resistência
+- Três vidas, tela de vitória e tela de derrota
 - Classes próprias para personagens, movimento e animação
 
 ## Organização do código
