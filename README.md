@@ -40,7 +40,7 @@ Para garantir a centralizacao, sempre use um desses dois iniciadores.
 - Cavaleiro com animacoes alinhadas de idle, corrida, pulo, queda, dano e ataque
 - Movimento mais suave, salto, dash com recarga e efeito visual
 - Aranhas, morcegos e mumias com movimento, patrulha e animacoes corrigidas
-- Morcegos perseguem o jogador quando ele se aproxima
+- Morcegos com voo baixo e patrulha simples para facilitar o combate
 - Pocoes de cura, pontuacao e porta com objetivo duplo
 - Guardiao final com barra de vida e sete pontos de resistencia
 - Tela de pausa, HUD ampliado e mensagens de objetivo

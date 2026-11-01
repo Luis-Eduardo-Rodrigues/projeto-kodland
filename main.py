@@ -44,8 +44,14 @@ ENEMY_ANIMATIONS = {
         "walk": animation("spider_walk", 5),
     },
     "bat": {
-        "idle": animation("bat_idle", 5),
-        "walk": animation("bat_walk", 5),
+        "idle": {
+            "l": ["bat_walk_l_0"],
+            "r": ["bat_walk_r_0"],
+        },
+        "walk": {
+            "l": ["bat_walk_l_0"],
+            "r": ["bat_walk_r_0"],
+        },
     },
     "mummy": {
         "idle": animation("mummy_idle", 4),
@@ -63,8 +69,8 @@ ENEMY_ANIMATIONS = {
 LEVELS = [
     {
         "name": "O VILAREJO DE ARVEN",
-        "sky": (70, 126, 152),
-        "horizon": (45, 76, 86),
+        "sky": (48, 72, 104),
+        "horizon": (34, 47, 70),
         "stone": (99, 84, 70),
         "spawn": (54, 500),
         "exit": Rect(888, 430, 46, 70),
@@ -83,6 +89,7 @@ LEVELS = [
             ("spider", 370, 500, 330, 500),
             ("spider", 700, 414, 680, 805),
             ("mummy", 610, 500, 570, 750),
+            ("spider", 835, 500, 780, 885),
         ],
     },
     {
@@ -113,8 +120,8 @@ LEVELS = [
     },
     {
         "name": "A CRIPTA DO SELO",
-        "sky": (22, 25, 38),
-        "horizon": (33, 34, 48),
+        "sky": (48, 72, 104),
+        "horizon": (34, 47, 70),
         "stone": (58, 58, 69),
         "spawn": (50, 500),
         "exit": Rect(888, 430, 46, 70),
@@ -143,10 +150,6 @@ LEVELS = [
 
 
 random.seed(17)
-STARS = [
-    (random.randint(20, 940), random.randint(30, 225)) for _ in range(36)
-]
-
 game_state = "menu"
 sound_enabled = True
 music_started = False
@@ -373,14 +376,14 @@ class Enemy(AnimatedCharacter):
         self.rect = Rect(0, 0, *sizes[kind])
         self.rect.midbottom = (x, floor_y)
         if kind == "bat":
-            self.rect.y -= 82
+            self.rect.y -= 38
         self.position_x = float(self.rect.x)
         self.base_y = float(self.rect.y)
         self.patrol_left = patrol_left
         self.patrol_right = patrol_right
         self.speed = {
             "spider": 72,
-            "bat": 86,
+            "bat": 62,
             "mummy": 58,
             "guardian": 48,
         }[kind]
@@ -423,15 +426,7 @@ class Enemy(AnimatedCharacter):
         return 0
 
     def patrol(self, dt):
-        chase = self.kind == "bat" and abs(
-            self.rect.centerx - hero.rect.centerx
-        ) < 190
-        if chase:
-            self.direction_value = (
-                1 if hero.rect.centerx > self.rect.centerx else -1
-            )
-        speed = self.speed * (1.25 if chase else 1)
-        self.position_x += speed * self.direction_value * dt
+        self.position_x += self.speed * self.direction_value * dt
         self.rect.x = round(self.position_x)
 
         if self.rect.left <= self.patrol_left:
@@ -594,12 +589,7 @@ def update(dt):
 def draw_background():
     data = level if level else LEVELS[0]
     screen.fill(data["sky"])
-    if data is LEVELS[2]:
-        for x, y in STARS:
-            screen.draw.filled_circle((x, y), 1, (148, 160, 181))
-        screen.draw.filled_circle((790, 105), 44, (188, 195, 194))
-    else:
-        screen.draw.filled_circle((790, 105), 38, (242, 218, 145))
+    screen.draw.filled_circle((790, 105), 38, (242, 218, 145))
 
     horizon = data["horizon"]
     for index, height in enumerate((150, 205, 175, 240, 190, 225)):
