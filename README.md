@@ -35,7 +35,7 @@ Para garantir a centralizacao, sempre use um desses dois iniciadores.
 ## Recursos implementados
 
 - Tres fases com objetivos, pontuacao e dificuldade progressiva
-- Menu principal redesenhado com hover, estado do audio e guia visual de teclas
+- Menu principal com hover, estado do audio e guia compacto de teclas
 - Controle conjunto de musica e efeitos sonoros
 - Cavaleiro com animacoes alinhadas de idle, corrida, pulo, queda, dano e ataque
 - Movimento mais suave, salto, dash com recarga e efeito visual
